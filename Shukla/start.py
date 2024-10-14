@@ -15,10 +15,10 @@ async def _(bot, cmd):
     await handle_user_status(bot, cmd)
     await cmd.continue_propagation()
 
-
 @Client.on_message(filters.private & filters.command("start"))
 async def start(client: Client, message: Message):
     user = message.from_user
+    
     button = InlineKeyboardMarkup([[
         InlineKeyboardButton(
             '•Uᴘᴅᴀᴛᴇs•', url='https://t.me/Zenitsu_AF'),
@@ -32,12 +32,23 @@ async def start(client: Client, message: Message):
         InlineKeyboardButton("🍑ᴘᴏʀɴ💦",
                              switch_inline_query_current_chat="",)
     ]])
-    if Config.START_PIC:
-        await message.reply_photo(Config.START_PIC, caption=Txt.START_TXT.format(user.mention), reply_markup=button)
-    else:
-        await message.reply_text(text=Txt.START_TXT.format(user.mention), reply_markup=button, disable_web_page_preview=True)
-
-
+    
+    try:
+        if Config.START_PIC:
+            await message.reply_photo(
+                photo=Config.START_PIC,
+                caption=Txt.START_TXT.format(user.mention),
+                reply_markup=button
+            )
+        else:
+            await message.reply_text(
+                text=Txt.START_TXT.format(user.mention),
+                reply_markup=button,
+                disable_web_page_preview=True
+            )
+    except Exception as e:
+        print(f"Error in start command: {e}")
+        
 # ⚠️ Handling CallBack Query⚠️
 
 @Client.on_callback_query()
